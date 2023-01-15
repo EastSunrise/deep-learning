@@ -7,6 +7,7 @@
 """
 import os
 import pickle
+from timeit import default_timer
 
 import numpy as np
 from matplotlib import pyplot as plt
@@ -22,17 +23,6 @@ input_size = x_train[0].shape[0]
 network_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'network.pkl')
 
 
-def get_network():
-    if not os.path.exists(network_file):
-        net = TwoLayerNet(input_size, hidden_size=50, output_size=10)
-        print("Creating network file ...")
-        with open(network_file, 'wb') as fp:
-            pickle.dump(net, fp, -1)
-        print("Done!")
-    with open(network_file, 'rb') as fp:
-        return pickle.load(fp)
-
-
 def train(train_num, batch_size=100):
     """
     训练数据.
@@ -44,8 +34,12 @@ def train(train_num, batch_size=100):
     train_accuracies = []
     test_accuracies = []
 
-    network = get_network()
-    iter_per_epoch = max(train_size / batch_size, 1)
+    # 初始化神经网络
+    if not os.path.exists(network_file):
+        network = TwoLayerNet(input_size, hidden_size=50, output_size=10)
+    else:
+        network = pickle.load(open(network_file, 'rb'))
+
     for i in range(train_num):
         print(f'training {i + 1}...')
         batch_mask = np.random.choice(train_size, batch_size)
@@ -63,11 +57,11 @@ def train(train_num, batch_size=100):
         test_accuracies.append(test_acc)
         print(f'accuracy: train={train_acc}, test={test_acc}')
 
-    # 存储训练结果
-    print("Updating network file ...")
-    with open(network_file, 'wb') as fp:
-        pickle.dump(network, fp, -1)
-    print("Done!")
+        if i % 100 == 99:
+            # 存储训练结果
+            print("Updating network file ...")
+            pickle.dump(network, open(network_file, 'wb'), -1)
+            print("Done!")
 
     # 绘制图形
     x = np.arange(len(train_accuracies))
@@ -81,4 +75,6 @@ def train(train_num, batch_size=100):
 
 
 if __name__ == '__main__':
-    train(100, batch_size=100)
+    start = default_timer()
+    train(50)
+    print("cost: ", default_timer() - start)
