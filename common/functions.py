@@ -57,7 +57,7 @@ def mean_squared_error(y: ndarray, t: ndarray):
 def cross_entropy_error(y: ndarray, t: ndarray):
     """
     交叉熵误差，计算时加上一个极小值，防止log(0)负的无限大.
-    :param y: 单个或者多个学习实例的预测值
+    :param y: 单个或者多个训练实例的预测值
     :param t: 正解
     """
     if y.ndim == 1:
