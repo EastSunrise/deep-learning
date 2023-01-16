@@ -100,5 +100,5 @@ def train_backward(train_num: int):
 
 if __name__ == '__main__':
     start = default_timer()
-    train_backward(100)
+    train_backward(10000)
     print("cost: ", default_timer() - start)
