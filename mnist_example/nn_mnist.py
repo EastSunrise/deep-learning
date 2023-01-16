@@ -79,7 +79,7 @@ def train_numerical(train_num: int):
     利用数值微分训练.
     :return:
     """
-    network_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), f'numerical.pkl')
+    network_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'numerical.pkl')
     if os.path.exists(network_file):
         train(network_file, train_num)
     else:
@@ -91,7 +91,7 @@ def train_backward(train_num: int):
     利用反向传播训练.
     :return:
     """
-    network_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), f'backward.pkl')
+    network_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'backward.pkl')
     if os.path.exists(network_file):
         train(network_file, train_num)
     else:
@@ -100,5 +100,5 @@ def train_backward(train_num: int):
 
 if __name__ == '__main__':
     start = default_timer()
-    train_backward(11)
+    train_backward(100)
     print("cost: ", default_timer() - start)
