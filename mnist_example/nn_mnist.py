@@ -13,7 +13,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 from dataset import mnist
-from mnist_example.two_layer_net import TwoLayerNetNumerical, TwoLayerNet, TwoLayerNetBackward
+from mnist_example.network import MultiLayerNetNumerical, MultiLayerNet, MultiLayerNetBackward
 
 x_train, t_train, x_test, t_test = mnist.load_mnist(normalize=True, one_hot_label=True)
 
@@ -22,16 +22,14 @@ train_size = x_train.shape[0]  # 训练集大小
 input_size = x_train[0].shape[0]
 
 
-def train(network_file, train_num: int, network: TwoLayerNet = None, batch_size=100):
+def train(network_file, train_num: int, network: MultiLayerNet = None, batch_size=100):
     """
     训练数据.
     :param network_file: 神经网络缓存pkl文件
     :param train_num: 训练次数
     :param network: 神经网络
     :param batch_size: 批次大小
-    :return: 训练过程中误差变化
     """
-    losses = []
     train_accuracies = []
     test_accuracies = []
     if os.path.exists(network_file):
@@ -44,11 +42,7 @@ def train(network_file, train_num: int, network: TwoLayerNet = None, batch_size=
         batch_mask = np.random.choice(train_size, batch_size)
         x_batch = x_train[batch_mask]
         t_batch = t_train[batch_mask]
-
-        # 计算梯度并更新参数
-        grad = network.gradient(x_batch, t_batch)
-        network.update_args(grad, learning_rate)
-        losses.append(network.loss(x_batch, t_batch))
+        network.train(x_batch, t_batch)
 
         if i % 10 == 0:
             train_acc = network.calc_accuracy(x_train, t_train)
@@ -77,28 +71,26 @@ def train(network_file, train_num: int, network: TwoLayerNet = None, batch_size=
 def train_numerical(train_num: int):
     """
     利用数值微分训练.
-    :return:
     """
     network_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'numerical.pkl')
     if os.path.exists(network_file):
         train(network_file, train_num)
     else:
-        train(network_file, train_num, TwoLayerNetNumerical(input_size, hidden_size=50, output_size=10))
+        train(network_file, train_num, MultiLayerNetNumerical(input_size, hidden_size=50, output_size=10))
 
 
 def train_backward(train_num: int):
     """
     利用反向传播训练.
-    :return:
     """
     network_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'backward.pkl')
     if os.path.exists(network_file):
         train(network_file, train_num)
     else:
-        train(network_file, train_num, TwoLayerNetBackward(input_size, hidden_size=50, output_size=10))
+        train(network_file, train_num, MultiLayerNetBackward(input_size, hidden_size=50, output_size=10))
 
 
 if __name__ == '__main__':
     start = default_timer()
-    train_backward(500000)
+    train_backward(1000)
     print("cost: ", default_timer() - start)

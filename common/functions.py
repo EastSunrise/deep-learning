@@ -70,17 +70,6 @@ def cross_entropy_error(y: ndarray, t: ndarray):
     return -np.sum(np.log(y[np.arange(size), t] + 1e-7)) / size
 
 
-def numerical_diff(func, x):
-    """
-    利用数值微分计算导数.
-    :param func: 函数
-    :param x: 自变量
-    :return: 在x处近似导数
-    """
-    delta = 1e-4
-    return (func(x + delta) - func(x - delta)) / (2 * delta)
-
-
 def numerical_gradient(func, x: ndarray):
     """
     利用数值微分计算梯度.
