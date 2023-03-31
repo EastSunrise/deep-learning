@@ -12,12 +12,11 @@ from timeit import default_timer
 import numpy as np
 from matplotlib import pyplot as plt
 
+from common.networks import MultiLayerNet
 from dataset import mnist
-from mnist_example.network import MultiLayerNetNumerical, MultiLayerNet, MultiLayerNetBackward
 
 x_train, t_train, x_test, t_test = mnist.load_mnist(normalize=True, one_hot_label=True)
 
-learning_rate = 0.1
 train_size = x_train.shape[0]  # 训练集大小
 input_size = x_train[0].shape[0]
 
@@ -68,17 +67,6 @@ def train(network_file, train_num: int, network: MultiLayerNet = None, batch_siz
     plt.show()
 
 
-def train_numerical(train_num: int):
-    """
-    利用数值微分训练.
-    """
-    network_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'numerical.pkl')
-    if os.path.exists(network_file):
-        train(network_file, train_num)
-    else:
-        train(network_file, train_num, MultiLayerNetNumerical(input_size, hidden_size=50, output_size=10))
-
-
 def train_backward(train_num: int):
     """
     利用反向传播训练.
@@ -87,10 +75,10 @@ def train_backward(train_num: int):
     if os.path.exists(network_file):
         train(network_file, train_num)
     else:
-        train(network_file, train_num, MultiLayerNetBackward(input_size, hidden_size=50, output_size=10))
+        train(network_file, train_num, MultiLayerNet(input_size, hidden_size=50, output_size=10))
 
 
 if __name__ == '__main__':
     start = default_timer()
-    train_backward(1000)
+    train_backward(100)
     print("cost: ", default_timer() - start)
