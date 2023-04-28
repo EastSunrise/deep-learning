@@ -5,7 +5,6 @@
 
 @Author Kingen
 """
-import abc
 from typing import List
 
 import numpy as np
@@ -20,7 +19,7 @@ activations = {'sigmoid': SigmoidLayer, 'relu': ReluLayer}
 weight_init_std = {'sigmoid': 1, 'relu': 2}
 
 
-class MultiLayerNet(abc.ABC):
+class MultiLayerNet:
     def __init__(self, input_size, output_size, hidden_size, activation='relu', optimizer=SGD(0.01)):
         """
         初始化多层神经网络.
