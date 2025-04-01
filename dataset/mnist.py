@@ -1,21 +1,19 @@
 # coding: utf-8
 # mnist dataset
 
-import gzip
 import os
 import os.path
 import pickle
-import urllib.request
 
 import numpy as np
 from PIL import Image
 
 dataset_dir = os.path.dirname(os.path.abspath(__file__))
 key_filenames = {
-    'train_img': 'train-images-idx3-ubyte.gz',
-    'train_label': 'train-labels-idx1-ubyte.gz',
-    'test_img': 't10k-images-idx3-ubyte.gz',
-    'test_label': 't10k-labels-idx1-ubyte.gz'
+    'train_img': 'train-images-idx3-ubyte',
+    'train_label': 'train-labels-idx1-ubyte',
+    'test_img': 't10k-images-idx3-ubyte',
+    'test_label': 't10k-labels-idx1-ubyte'
 }
 save_file = dataset_dir + "/mnist.pkl"
 
@@ -26,18 +24,16 @@ img_size = 784
 
 
 def download_mnist():
-    for filename in key_filenames.values():
-        filepath = dataset_dir + "/" + filename
-        if os.path.exists(filepath):
-            continue
-        print("Downloading " + filename + " ... ")
-        urllib.request.urlretrieve('http://yann.lecun.com/exdb/mnist/' + filename, filepath)
-        print("Done")
+    """
+    Download from kaggle.com by 'kaggle datasets download -d zalando-research/fashionmnist'.
+    Then unzip the file and move files to the dataset directory.
+    """
+    pass
 
 
 def _load_img(filename):
     print("Converting " + filename + " to NumPy Array ...")
-    with gzip.open(os.path.join(dataset_dir, filename), 'rb') as f:
+    with open(os.path.join(dataset_dir, filename), 'rb') as f:
         data = np.frombuffer(f.read(), np.uint8, offset=16)
     data = data.reshape(-1, img_size)
     print("Done")
@@ -46,7 +42,7 @@ def _load_img(filename):
 
 def _load_label(filename):
     print("Converting " + filename + " to NumPy Array ...")
-    with gzip.open(os.path.join(dataset_dir, filename), 'rb') as f:
+    with open(os.path.join(dataset_dir, filename), 'rb') as f:
         labels = np.frombuffer(f.read(), np.uint8, offset=8)
     print("Done")
     return labels
